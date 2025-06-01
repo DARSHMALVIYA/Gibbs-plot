@@ -1,0 +1,86 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Load the Excel file
+df = pd.read_excel("Path to your excel file", sheet_name="Sheet1")  # Adjust the path as needed
+
+# Data for the plot (you can customize this as needed)
+x = np.linspace(0, 1, 500)  # X values from 0 to 1
+y = np.logspace(0, 5, 500)  # Y values from 1 to 100000 (log scale)
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 6))
+
+# Plot 
+ax1 = axes[0]
+# Add the diagonal lines
+diagonal_lines = [
+    (700, 100000, 0, 1),
+    (200, 4, 0, 1),
+    (330, 30, 0.46, 1),
+    (330, 9000, 0.46, 1)
+]
+
+for y_start, y_end, x_start, x_end in diagonal_lines:
+    ax1.plot([x_start, x_end], [y_start, y_end], 'k--', linewidth=0.8)
+
+# Set the x-axis limits and ticks
+ax1.set_xlim(0, 1)
+ax1.set_xticks(np.arange(0, 1.1, 0.2))
+
+# Set the y-axis to log scale
+ax1.set_yscale('log')
+ax1.set_yticks([1, 10, 100, 1000, 10000, 100000])
+
+# Add labels and title
+ax1.set_xlabel('Na/(Na+Ca)', fontsize=12)
+ax1.set_ylabel('TDS (mg/l)', fontsize=12)
+ax1.set_title('2022', fontsize=12)
+ax1.text(0.55, 35000, 'Evaporation \ndominance', fontsize=12, rotation=0)
+ax1.text(0.05, 300, 'Rock weathering\ndominance', fontsize=12, rotation=0)
+ax1.text(0.72, 15, 'Precipitation\ndominance', fontsize=12, rotation=0)
+
+#Select marker type and marker colour here.
+markers = ['o', 's', '^']  # Circle, square, triangle
+colors = ['yellow', 'red', 'blue']  # Colors for the different groups
+
+# Here you can plot different symbol for different rows for your data (Like Row 1:119 for Gujarat state, Row 119:165 for Harayana state and So on)
+ax1.scatter(df.iloc[:119]['Na/Na+Ca'], df.iloc[:119]['TDS'], marker=markers[0], color=colors[0], s=10, label='Gujarat')
+ax1.scatter(df.iloc[119:165]['Na/Na+Ca'], df.iloc[119:165]['TDS'], marker=markers[1], color=colors[1], s=10, label='Haryana')
+ax1.scatter(df.iloc[165:478]['Na/Na+Ca'], df.iloc[165:478]['TDS'], marker=markers[2], color=colors[2], s=10, label='Rajasthan')
+
+# Plot for 2022
+ax2 = axes[1]
+# Add the diagonal lines
+for y_start, y_end, x_start, x_end in diagonal_lines:
+    ax2.plot([x_start, x_end], [y_start, y_end], 'k--', linewidth=0.8)
+
+# Set the x-axis limits and ticks
+ax2.set_xlim(0, 1)
+ax2.set_xticks(np.arange(0, 1.1, 0.2))
+
+# Set the y-axis to log scale
+ax2.set_yscale('log')
+ax2.set_yticks([1, 10, 100, 1000, 10000, 100000])
+
+# Add labels and title
+ax2.set_xlabel(r'Cl / (Cl + HCO$_{3}$)', fontsize=12)
+ax2.set_ylabel('TDS (mg/l)', fontsize=12)
+ax2.set_title('2022', fontsize=12)
+ax2.text(0.55, 35000, 'Evaporation \ndominance', fontsize=12, rotation=0)
+ax2.text(0.05, 300, 'Rock weathering\ndominance', fontsize=12, rotation=0)
+ax2.text(0.72, 15, 'Precipitation\ndominance', fontsize=12, rotation=0)
+
+# Here you can plot different symbol for different rows for your data (Like Row 1:119 for Gujarat state, Row 119:165 for Harayana state and So on)
+ax2.scatter(df.iloc[:119]['cl/cl+hco3'], df.iloc[:119]['TDS'], marker=markers[0], color=colors[0], s=10, label='Gujarat')
+ax2.scatter(df.iloc[119:165]['cl/cl+hco3'], df.iloc[119:165]['TDS'], marker=markers[1], color=colors[1], s=10, label='Haryana')
+ax2.scatter(df.iloc[165:478]['cl/cl+hco3'], df.iloc[165:478]['TDS'], marker=markers[2], color=colors[2], s=10, label='Rajasthan')
+
+# Add legend to the first subplot
+ax1.legend(frameon=True)
+
+# Adjust layout to prevent overlap
+plt.tight_layout()
+plt.savefig('File _name.jpg',dpi=1000)
+# Show the plot
+plt.show()
